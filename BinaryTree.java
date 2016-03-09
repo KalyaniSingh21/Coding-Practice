@@ -5,27 +5,21 @@
  */
 package googlepractice;
 
+//import static javafx.scene.input.KeyCode.T;
+
 /**
  *
  * @author Kalyani
  */
-public class BinaryTree {
+class Node{
     
-    BinaryTree ln,rn,root;
-    int data;
+    public Node ln,rn;
+    public int data;
     
     
-    BinaryTree()
+  
+    Node(int n)
     {
-        root = null;
-        ln = null;
-        rn = null;
-        data = 0;
-    }
-    
-    BinaryTree(BinaryTree bt,int n)
-    {
-        root = bt;
         ln = null;
         rn = null;
         data = n;
@@ -33,12 +27,12 @@ public class BinaryTree {
     
     /* Basic functions for seeting left and right nodes */
     
-    void setRight(BinaryTree node)
+    void setRight(Node node)
     {
         rn = node;
     }
             
-    void setLeft(BinaryTree node)
+    void setLeft(Node node)
     {
         ln = node;
     }
@@ -48,12 +42,12 @@ public class BinaryTree {
         data = n;
     }
             
-    BinaryTree getRight()
+    Node getRight()
     {
         return rn;
     }
     
-    BinaryTree getLeft()
+    Node getLeft()
     {
         return ln;
     }
@@ -61,166 +55,148 @@ public class BinaryTree {
     int getData()
     {
         return data;
-    }
+    }    
+   
+}
+
+class BinaryTree{
     
-    /* Check if the tree is empty */
+    public static Node root;
     
-    boolean isEmpty() 
+    BinaryTree(Node root)
     {
-        return (root==null);
+        this.root = root;
     }
     
     void insert(int data)
     {
-       root = insert(root,data);
+        root = insert(root,data);
     }
     
-    
-    /* check the working on notebook Start everything from the root */
-   BinaryTree insert(BinaryTree root, int data)
+    Node insert(Node root, int data)
     {
-        /*
-            root = insert(root,data);
-            System.out.print(data+ "\t");
-        */
-        
-        if (root == null)
+        if(root == null)
         {
-            root = new BinaryTree(root,data);   
-            System.out.print(data+ "\t");
+            root = new Node(data);
+            return root;
         }
-           
-        else if (data <= root.getData())
+        else if(data == root.getData())
         {
             root.ln = insert(root.ln,data);
-            System.out.print(data+ "\t");
-        }
-        else
-        {
-            root.rn = insert(root.rn,data);
-            System.out.print(data+ "\t");
+            System.out.print("Data already exists");
+            return root.ln;
         }
         
-        return root;
+        else if (data < root.getData())
+            {
+                root.ln = insert(root.ln,data);
+                System.out.print(root.getData()+"\t");
+                return root.ln;
+            }
+            
+        else
+            {
+                root.rn = insert(root.rn,data);  
+                System.out.print(root.getData()+"\t");
+                return root.rn;
+            }
+        
+    }
+    
+    boolean search(Node root, int data)
+    {
+        if(data == root.getData())
+        {            
+            return true;
+        }
+        
+        else if (data < root.getData())
+        {
+            search(root.getLeft(),data);
+            return true;
+        }
+            
+        else if (data > root.getData())
+        {
+            search(root.getRight(),data);  
+            return true;
+        }
+        else
+            return false;
+            
+        //return false;
+    }
+    
+    
+   static void preorder(Node root)
+    {
+        System.out.print("\t"+root.data);
+        preorder(root.getLeft());
+        preorder(root.getRight());
     }
    
-  /* insert_left(BinaryTree node, int data)
-   {
-       if(data == node.getData())
+    Node delete(Node root,int data)
+    {
+        if(root == null)
+            return null;       
+        else if(data < root.getData())  
+           root.ln = delete(root.getLeft(),data);
+        
+        else if (data > root.getData())
+            root.rn = delete(root.getRight(),data);
+        
+        else
+        { 
+            // Node with only left child
+            if(root.getRight() == null)
+                return root.getLeft();
+            
+            //Node with only right child
+            else if(root.getLeft() == null)
+                return root.getRight();
+            
+            else
+            {
+                //get data of rightmost node from left subtree
+                int datanew = rightmostdata(root.getLeft());
+                
+                root.ln = delete(root.ln,datanew);
+                
+            }
+            
+        }
+        return root;
+       
+                    
+    }
+    
+    int rightmostdata(Node node)
+    {
+        int data = 0;
+        while(node.getRight() != null)
+           data = rightmostdata(node.getRight());
+        return data;
+    }
+            
+   
+
+
+    public static void main(String[] args)
+    {
+        Node node = new Node(18);
                
-   } */
-   
-   
-   BinaryTree delete(BinaryTree root, int data)
-   {
-       BinaryTree previous,n,left,right;
-       if(root.getData() == data)
-       {
-              left = root.getLeft();
-              right = root.getRight();
-              
-              if(left == null && right == null)
-              {
-                  previous = null;
-                  return null;
-              }
-              
-              else if(left == null)
-              {
-                  previous = right;
-                  return previous;
-              }
-              
-              else if(right == null)
-              {
-                  previous = left;
-                  return left;
-              }
-              
-              else 
-              {
-                  previous = right;
-                  while(previous.getLeft() != null)
-                      previous = previous.getLeft();
-                  previous.setLeft(left);
-                  return right;
-              }
-       }
-       
-       else if (data < root.getData())
-       {
-          n = delete(root.getLeft(),data);
-          root.setLeft(n);
-       }
-       
-       else if (data > root.getData())
-       {
-           n = delete(root.getRight(), data);
-           root.setRight(n);
-       }
-       
-       return root;
-   }
-   
-   boolean search(BinaryTree root,int data)
-   {
-       if(isEmpty())
-       {
-           System.out.print("Empty Tree");
-           return false;
-       }
-       else if (data == root.getData())
-           return true;
-       else if(data < root.getData())
-           root = root.getLeft();
-       else if (data > root.getData())
-           root = root.getRight();
-       return false;
-   }
-   
-   void inorder(BinaryTree root)
-   {
-       //BinaryTree left = root.getLeft();   // do not declare them because they wil be dynamic, changes with every itertion
-       //BinaryTree right = root.getRight();
-       //int data = (root.getData());
-       
-       inorder(root.getLeft());
-       System.out.print(root.getData()+" ");
-       inorder (root.getRight());
-       return ;
-   }
-   
-   void preorder(BinaryTree root) 
-   {
-       if(root != null)
-       {
-       System.out.print(root.getData()+" ");
-       preorder(root.getLeft());
-       preorder(root.getRight());
-       }
-   }
-   
-   void postorder(BinaryTree root)
-   {
-       postorder(root.getLeft());
-       postorder(root.getRight());
-       System.out.print(root.getData()+" ");
-   }
-   
-   
-  public static void main(String[] args)
-  {
-      BinaryTree bt = new BinaryTree();
-     // BinaryTree bt = new BinaryTree(bt1,9);
-      bt.insert(9);
-      bt.insert(4);
-      bt.insert(6);
-      bt.insert(8);
-      bt.insert(12);
-      bt.insert(10);
-      bt.insert(15);
-      
-      bt.preorder(bt);
-  }
+        BinaryTree bn = new BinaryTree(node);
+        bn.insert(5);
+        bn.insert(10);
+        bn.insert(8);
+        bn.insert(12);
+        bn.insert(8);
+        
+        System.out.print(bn.search(node,1));
+        
+       // preorder(node);
+        
+        
+    }   
     
 }
