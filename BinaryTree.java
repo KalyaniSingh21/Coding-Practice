@@ -7,6 +7,9 @@ package googlepractice;
 
 //import static javafx.scene.input.KeyCode.T;
 
+import java.util.Queue;
+
+
 /**
  *
  * @author Kalyani
@@ -177,7 +180,29 @@ class BinaryTree{
            data = rightmostdata(node.getRight());
         return data;
     }
-            
+      
+    void breadthfirstsearch(Node root)
+   {
+       Queue<Node> q = null;
+       if(root!=null)
+       {
+           q.add(root);
+           while(! q.isEmpty())
+           {
+               Node item = (Node) q.remove();
+               System.out.print("/t"+item);
+               if(item != null)
+               {
+                   if(root.ln != null)
+                       q.add(root.ln);
+                   if(root.rn !=null )
+                       q.add(root.rn);
+               }
+           }
+       }
+       
+       
+   }
    
 
 
@@ -192,6 +217,7 @@ class BinaryTree{
         bn.insert(12);
         bn.insert(8);
         
+        bn.breadthfirstsearch(node);
         System.out.print(bn.search(node,1));
         
        // preorder(node);

@@ -7,6 +7,7 @@ package googlepractice;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 
  class TreeNode<T>{
     
@@ -86,6 +87,9 @@ import java.util.List;
        
        l.remove(node);
    }
+   
+   
+           
 }
 
 public class NAryTree<T> {
@@ -132,7 +136,7 @@ public class NAryTree<T> {
           
       }
     
-      ArrayList<TreeNode<T>> preorderTraversal(TreeNode<T> root, ArrayList<TreeNode<T>> preorder)
+      ArrayList<TreeNode<T>> preorderTraversal(TreeNode<T> root, ArrayList<TreeNode<T>> preorder)  // DFS traversal
       {
           preorder.add(root);
           for(TreeNode<T> r : root.getChildren()) //Istead of giving a list of children, it gives me single child at a time
